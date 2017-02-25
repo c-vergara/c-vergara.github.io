@@ -14,9 +14,14 @@ p {
 .container {
     padding: 20px 50px;
 }
-
+@media only screen and (max-width: 400px) {
+    .section {
+        max-width: 350px;
+    }
+}
 .section {
     border: 1px solid #4a4a4a;
+    width: 400px;
     box-shadow: rgba(0, 0, 0, 0.13) 1px 2px 3px;
     padding: 10px;
     position: relative;
@@ -57,11 +62,14 @@ p {
 .section-text {
     /*white-space: pre-line;*/
     display: flex;
+    max-width: 240px;
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
 }
 
-.section-text span:before {
-    content: ">";
+.section-text p:before {
+    content: "> ";
+    font-weight: bold;
+    color: #b1b1b1;
 }
