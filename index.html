@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<script type="text/javascript" src="angular.min.js"></script>
+		<script type="text/javascript" src="tabs.js"></script>
+		<script type="text/javascript" src="angular-scroll-master/angular-scroll.min.js"></script>
+		<link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+	</head>
+	<body ng-app="Tabs" ng-controller="tabsController">
+		<div class="container">
+			<div class="section" ng-repeat="section in song track by $index" data-index="{{$index}}">
+			<span class="section-background" style="background-color: {{types[section.type]}}"></span>
+				<div class="section-name">
+					<h3>{{section.type}}</h3>
+				</div>
+				<div class="section-color" style="background-color: {{types[section.type]}}"></div>
+				<div class="section-text">
+					<div ng-repeat="line in section.lines track by $index">
+						<p>{{line}}</p>
+					</div>
+				</div>
+			</div>
+			<div id="aca"><p>fin</p></div>
+
+		</div>
+	</body>
+</html>
