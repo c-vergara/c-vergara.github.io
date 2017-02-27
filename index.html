@@ -5,23 +5,48 @@
 		<script type="text/javascript" src="angular-scroll-master/angular-scroll.min.js"></script>
 		<link href="style.css" media="screen" rel="stylesheet" type="text/css" />
 		<link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 	</head>
 	<body ng-app="Tabs" ng-controller="tabsController">
 		<div class="container">
-			<div class="section" ng-repeat="section in song track by $index" data-index="{{$index}}">
-			<span class="section-background" style="background-color: {{types[section.type]}}"></span>
-				<div class="section-name">
-					<h3>{{section.type}}</h3>
+			<h1 class="display-4">
+			Prompter <small>Slowride - Foghat</small>
+			</h1>
+
+			<div class="controls">
+				<button class="btn btn-primary" role="button" ng-click="options.run_autoscroll=!options.run_autoscroll">Toggle autoscroll ({{options.run_autoscroll?'on':'off'}})</button>
+				<div class="btn-group btn-group-sm">
+					<button class="btn btn-info" ng-click="change_section(-1)">prev section</button>
+					<button class="btn btn-info" ng-click="change_section(1)">next section</button>
 				</div>
-				<div class="section-color" style="background-color: {{types[section.type]}}"></div>
-				<div class="section-text">
-					<div ng-repeat="line in section.lines track by $index">
-						<p>{{line}}</p>
+			</div>
+			<div class="song-container row justify-content-md-center">
+				<div class="section col-12 row align-items-center"
+					 ng-class="{'current': $index == scroller.current_section}"
+					 ng-repeat="section in song track by $index"
+					 data-index="{{$index}}">
+					<span class="section-background" style="background-color: {{types[section.type]}}"></span>
+					<div class="section-name col-2">
+						<h4>{{section.type}}</h4>
+					</div>
+					<div class="section-color" style="background-color: {{types[section.type]}}"></div>
+					<div class="section-text col-auto">
+						<div ng-repeat="line in section.lines track by $index">
+							<p>{{line}}</p>
+						</div>
+					</div>
+
+					<div class="section-progress progress" ng-if="$index == scroller.current_section">
+					  <div class="progress-bar bg-danger" role="progressbar" style="width: {{scroller.elapsed_ms/(10*scroller.lapse)}}%;" aria-valuenow="{{scroller.elapsed_ms/(10*scroller.lapse)}}" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
 				</div>
 			</div>
-			<div id="aca"><p>fin</p></div>
 
+			<div id="end"><p>fin</p></div>
 		</div>
 	</body>
 </html>

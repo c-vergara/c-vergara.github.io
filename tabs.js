@@ -2,6 +2,9 @@ var app = angular.module('Tabs', ['duScroll']);
 
 app.controller('tabsController', function ($scope, $document, $timeout, $interval) {
 
+	$scope.options = {
+		run_autoscroll: false
+	}
 
 	$scope.types = {
 		comentario: '#B7B7B7',
@@ -74,24 +77,80 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 
 
 
-	var seconds = 240;
-	var lapse = seconds / $scope.song.length;
-	var current_section = 0;
-	console.log('lapse', lapse)
+	$scope.scroller = {
+		total_seconds: 240,
+		elapsed_ms: 0,
+		lapse: null,
+		current_section: -1,
+		current_section_progress: 0,
+		interval: null,
+		progress_interval: null,
+		progress_refresh: 100
+		
+	}
+	$scope.scroller.lapse = $scope.scroller.total_seconds / $scope.song.length;
+	// console.log('lapse', $scope.scroller.lapse)
 
-	var scroller = $interval(function() {
-		var element = angular.element(document.querySelectorAll("[data-index='"+current_section+"']"));
-		console.log(element)
-		$document.scrollToElement(element, 0, 4000);
-		console.log('scroller', current_section);
-		current_section += 1;
-	}, lapse*1000, $scope.song.length)
 
+	function work() {
+		if (!$scope.options.run_autoscroll) {
+			// console.warn('not running');
+			return;
+		}
+		if ($scope.scroller.current_section > $scope.song.length) {
+			// console.warn('end');
+			return;
+		}
+		// reset progress bar
+		$scope.scroller.elapsed_ms = 0;
+		if ($scope.scroller.progress_interval) {
+			// console.warn('killing progress_interval');
+			$interval.cancel($scope.scroller.progress_interval);			
+		}
 
-	console.log($scope.song)	
+		// advance to  next section
+		$scope.scroller.current_section += 1;
+		$scope.move_to_current_section();
+		// run progress bar
+		$scope.scroller.progress_interval = $interval(function() {
+			$scope.scroller.elapsed_ms += $scope.scroller.progress_refresh;
+			// console.warn('progressing');
+		}, $scope.scroller.progress_refresh)
+
+		// rinse and repeat
+		$timeout(work, $scope.scroller.lapse*1000)
+	}
+	work();
+
+	$scope.$watch('options.run_autoscroll', function(_new, _old) {
+		if (_new) {
+			if ($scope.scroller.current_section >= 0) {
+				$scope.scroller.current_section -= 1;
+			}
+			work();
+		} else {
+			$interval.cancel($scope.scroller.progress_interval)
+			$scope.scroller.elapsed_ms = 0;
+
+		}
+	})
+
+	$scope.move_to_current_section = function() {
+		var element = angular.element(document.querySelectorAll("[data-index='"+$scope.scroller.current_section+"']"));
+		if (element) {
+			$document.scrollToElement(element, 100, 2000);
+			// console.log('scroller', $scope.scroller.current_section);
+		} else {
+			console.log('no more elements');
+		}
+	}
+
+	$scope.change_section = function (step) {
+		$scope.scroller.current_section += step;
+		$scope.scroller.elapsed_ms = 0;
+		$scope.move_to_current_section();
+	}
+
+	// console.log($scope.song)	
 
 })
-
-
-
-
