@@ -47,6 +47,8 @@ p {
 }
 
 .section-text {
+    font-size: 23px;
+    max-width: 280px;
     margin-left: 10px;
 }
 
