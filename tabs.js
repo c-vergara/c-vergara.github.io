@@ -7,16 +7,22 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 	}
 
 	$scope.types = {
-		comentario: '#B7B7B7',
-		coro: '#FF0000',
-		verso_1: '#0000FF',
-		verso_2: '#33AAFF',
-		fill_1: '#00FF00',
-		fill_2: '#B6FF00',
-		fill_3: '#EAFEB7',
+		text: 'default',
+		coro: 'car_1',
+		verso_1: 'car_2',
+		verso_2: 'car_3',
+		fill_1: 'car_4',
+		fill_2: 'car_5',
+		fill_3: 'car_6',
+		intro: 'car_7',
+		solo: 'delorean',
 	}
 
 	$scope.song = [
+		{
+			type: 'intro',
+			text: '[Silencio]'
+		},
 		{
 			type: 'coro',
 			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy'
@@ -36,6 +42,14 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 		{
 			type: 'verso_2',
 			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine'
+		},
+		{
+			type: 'solo',
+			text: 'Oooh'
+		},
+		{
+			type: 'verso_1',
+			text: 'I\'m in the mood\nThe rhythm is right\nMove to the music\nWe can roll all night'
 		},
 		{
 			type: 'fill_2',
@@ -62,8 +76,8 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine'
 		},
 		{
-			type: 'comentario',
-			text: '[FIN VERSION]'
+			type: 'text',
+			text: '[FIN VERSION -> improvisacion]'
 		},
 	]
 
@@ -135,10 +149,10 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 		}
 	})
 
-	$scope.move_to_current_section = function() {
+	$scope.move_to_current_section = function(time_ms) {
 		var element = angular.element(document.querySelectorAll("[data-index='"+$scope.scroller.current_section+"']"));
 		if (element) {
-			$document.scrollToElement(element, 100, 2000);
+			$document.scrollToElement(element, 100, time_ms);
 			// console.log('scroller', $scope.scroller.current_section);
 		} else {
 			console.log('no more elements');
@@ -148,7 +162,7 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 	$scope.change_section = function (step) {
 		$scope.scroller.current_section += step;
 		$scope.scroller.elapsed_ms = 0;
-		$scope.move_to_current_section();
+		$scope.move_to_current_section(2000);
 	}
 
 	// console.log($scope.song)	

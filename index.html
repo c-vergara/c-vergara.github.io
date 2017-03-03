@@ -10,30 +10,37 @@
 		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+		<title>Prompter</title>
 	</head>
 	<body ng-app="Tabs" ng-controller="tabsController">
-		<div class="container">
+		<div class="container" ng-cloak>
 			<h1 class="display-4">
-			Prompter <small>Slowride - Foghat</small>
+			Slowride - Foghat
 			</h1>
 
-			<div class="controls">
-				<button class="btn btn-primary" role="button" ng-click="options.run_autoscroll=!options.run_autoscroll">Toggle autoscroll ({{options.run_autoscroll?'on':'off'}})</button>
-				<div class="btn-group btn-group-sm">
-					<button class="btn btn-info" ng-click="change_section(-1)">prev section</button>
-					<button class="btn btn-info" ng-click="change_section(1)">next section</button>
+			<div class="controls justify-content-md-center">
+				<button class="btn btn-primary" role="button" ng-click="options.run_autoscroll=!options.run_autoscroll">{{options.run_autoscroll?'Stop':'Run'}} autoscroll</button>
+				<div class="btn-group btn-group-lg">
+					<button class="btn btn-info" ng-click="change_section(-1)">
+						<img src="icons/rewind.svg">
+					</button>
+					<button class="btn btn-info" ng-click="change_section(1)">
+						<img src="icons/forward.svg">
+					</button>
 				</div>
+				<button class="btn btn-lg btn-success" ng-click="move_to_current_section(1000)" ng-disabled="scroller.current_section < 0">Current</button>
 			</div>
 			<div class="song-container row justify-content-md-center">
 				<div class="section col-12 row align-items-center"
 					 ng-class="{'current': $index == scroller.current_section}"
 					 ng-repeat="section in song track by $index"
 					 data-index="{{$index}}">
-					<span class="section-background" style="background-color: {{types[section.type]}}"></span>
 					<div class="section-name col-2">
 						<h4>{{section.type}}</h4>
 					</div>
-					<div class="section-color" style="background-color: {{types[section.type]}}"></div>
+					<div class="section-icon">
+						<img src="icons/{{::types[section.type]}}.svg">
+					</div>
 					<div class="section-text col-auto">
 						<div ng-repeat="line in section.lines track by $index">
 							<p>{{line}}</p>
