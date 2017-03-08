@@ -21,63 +21,77 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 	$scope.song = [
 		{
 			type: 'intro',
-			text: '[Silencio]'
+			text: '[Silencio]',
+			time: 19
 		},
 		{
 			type: 'coro',
-			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy'
+			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy',
+			time: 33
 		},
 		{
 			type: 'verso_1',
-			text: 'I\'m in the mood\nThe rhythm is right\nMove to the music\nWe can roll all night'
+			text: 'I\'m in the mood\nThe rhythm is right\nMove to the music\nWe can roll all night',
+			time:  16
 		},
 		{
 			type: 'fill_1',
-			text: 'Oooh\nSlowride\nOooh'
+			text: 'Oooh\nSlowride\nOooh',
+			time:  14
 		},
 		{
 			type: 'coro',
-			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy'
+			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy',
+			time:  16
 		},
 		{
 			type: 'verso_2',
-			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine'
+			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine',
+			time:  17
 		},
 		{
 			type: 'solo',
-			text: 'Oooh'
+			text: 'Oooh',
+			time:  20
 		},
 		{
 			type: 'verso_1',
-			text: 'I\'m in the mood\nThe rhythm is right\nMove to the music\nWe can roll all night'
+			text: 'I\'m in the mood\nThe rhythm is right\nMove to the music\nWe can roll all night',
+			time:  17
 		},
 		{
 			type: 'fill_2',
-			text: 'Oooh'
+			text: 'Oooh',
+			time:  5
 		},
 		{
 			type: 'coro',
-			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy'
+			text: 'Slowride, take it easy\nSlowride, take it easy\nSlowride, take it easy',
+			time:  16
 		},
 		{
 			type: 'verso_2',
-			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine'
+			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine',
+			time:  16
 		},
 		{
 			type: 'fill_3',
-			text: '[Silencio]'
+			text: '[Silencio]',
+			time:  12
 		},
 		{
 			type: 'coro',
-			text: 'Slow ride, easy, slow ride, sleazy\nSlow ride, easy, slow ride, sleazy'
+			text: 'Slow ride, easy, slow ride, sleazy\nSlow ride, easy, slow ride, sleazy',
+			time:  34
 		},
 		{
 			type: 'verso_2',
-			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine'
+			text: 'Slow down, go down, got to get your lovin\' one more time\nHold me, roll me, slow ridin\' woman you\'re so fine',
+			time:  16
 		},
 		{
 			type: 'text',
-			text: '[FIN VERSION -> improvisacion]'
+			text: '[FIN VERSION -> improvisacion]',
 		},
 	]
 
@@ -94,15 +108,13 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 	$scope.scroller = {
 		total_seconds: 240,
 		elapsed_ms: 0,
-		lapse: null,
-		current_section: -1,
+		current_section: 0,
 		current_section_progress: 0,
 		interval: null,
 		progress_interval: null,
 		progress_refresh: 100
 		
 	}
-	$scope.scroller.lapse = $scope.scroller.total_seconds / $scope.song.length;
 	// console.log('lapse', $scope.scroller.lapse)
 
 
@@ -111,7 +123,7 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 			// console.warn('not running');
 			return;
 		}
-		if ($scope.scroller.current_section > $scope.song.length) {
+		if ($scope.scroller.current_section >= $scope.song.length) {
 			// console.warn('end');
 			return;
 		}
@@ -123,7 +135,7 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 		}
 
 		// advance to  next section
-		$scope.scroller.current_section += 1;
+		// $scope.scroller.current_section += 1;
 		$scope.move_to_current_section();
 		// run progress bar
 		$scope.scroller.progress_interval = $interval(function() {
@@ -132,15 +144,21 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 		}, $scope.scroller.progress_refresh)
 
 		// rinse and repeat
-		$timeout(work, $scope.scroller.lapse*1000)
+		$timeout(next_step, $scope.song[$scope.scroller.current_section].time*1000)
 	}
+
+	function next_step(){
+		$scope.scroller.current_section += 1;
+		work();
+	}
+	
 	work();
 
 	$scope.$watch('options.run_autoscroll', function(_new, _old) {
 		if (_new) {
-			if ($scope.scroller.current_section >= 0) {
-				$scope.scroller.current_section -= 1;
-			}
+			// if ($scope.scroller.current_section >= 0) {
+			// 	$scope.scroller.current_section -= 1;
+			// }
 			work();
 		} else {
 			$interval.cancel($scope.scroller.progress_interval)
@@ -150,6 +168,9 @@ app.controller('tabsController', function ($scope, $document, $timeout, $interva
 	})
 
 	$scope.move_to_current_section = function(time_ms) {
+		if (!time_ms) {
+			time_ms = 1000;
+		}
 		var element = angular.element(document.querySelectorAll("[data-index='"+$scope.scroller.current_section+"']"));
 		if (element) {
 			$document.scrollToElement(element, 100, time_ms);

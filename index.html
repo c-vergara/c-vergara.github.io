@@ -18,6 +18,35 @@
 			Slowride - Foghat
 			</h1>
 
+			<div class="song-container row justify-content-md-center">
+				<div class="section col-xs-12 col-lg-8 align-items-center"
+					 ng-class="{'current': $index == scroller.current_section}"
+					 ng-repeat="section in song track by $index"
+					 data-index="{{$index}}">
+					<div class="row">
+						<div class="section-name col-2">
+							<h4>{{section.type}}</h4>
+							<p>
+								{{$index == scroller.current_section?scroller.elapsed_ms/1000:0}}/{{section.time}}
+							</p>
+						</div>
+						<div class="section-icon">
+							<img src="icons/{{types[section.type]}}.svg" onerror="this.onerror=null">
+						</div>
+						<div class="section-text">
+							<div ng-repeat="line in section.lines track by $index">
+								<p>{{line}}</p>
+							</div>
+						</div>
+
+						<div class="section-progress progress" ng-if="$index == scroller.current_section">
+						  <div class="progress-bar bg-danger" role="progressbar" style="width: {{scroller.elapsed_ms/(10*section.time)}}%;" aria-valuenow="{{scroller.elapsed_ms/(10*scroller.lapse)}}" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="end"><p>fin</p></div>
 			<div class="controls justify-content-md-center">
 				<button class="btn btn-primary" role="button" ng-click="options.run_autoscroll=!options.run_autoscroll">{{options.run_autoscroll?'Stop':'Run'}} autoscroll</button>
 				<div class="btn-group btn-group-lg">
@@ -30,30 +59,6 @@
 				</div>
 				<button class="btn btn-lg btn-success" ng-click="move_to_current_section(1000)" ng-disabled="scroller.current_section < 0">Current</button>
 			</div>
-			<div class="song-container row justify-content-md-center">
-				<div class="section col-12 row align-items-center"
-					 ng-class="{'current': $index == scroller.current_section}"
-					 ng-repeat="section in song track by $index"
-					 data-index="{{$index}}">
-					<div class="section-name col-2">
-						<h4>{{section.type}}</h4>
-					</div>
-					<div class="section-icon">
-						<img src="icons/{{::types[section.type]}}.svg">
-					</div>
-					<div class="section-text">
-						<div ng-repeat="line in section.lines track by $index">
-							<p>{{line}}</p>
-						</div>
-					</div>
-
-					<div class="section-progress progress" ng-if="$index == scroller.current_section">
-					  <div class="progress-bar bg-danger" role="progressbar" style="width: {{scroller.elapsed_ms/(10*scroller.lapse)}}%;" aria-valuenow="{{scroller.elapsed_ms/(10*scroller.lapse)}}" aria-valuemin="0" aria-valuemax="100"></div>
-					</div>
-				</div>
-			</div>
-
-			<div id="end"><p>fin</p></div>
 		</div>
 	</body>
 </html>
